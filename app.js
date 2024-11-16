@@ -2,6 +2,19 @@ function App() {
     const [tasks, setTasks] = React.useState([]); // Список завдань
     const [newTask, setNewTask] = React.useState(""); // Нове завдання для додавання
 
+    // Завантажуємо завдання з LocalStorage, якщо вони є
+    React.useEffect(() => {
+        const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+        if (savedTasks) {
+            setTasks(savedTasks);
+        }
+    }, []);
+
+    // Зберігаємо завдання в LocalStorage щоразу, коли список завдань змінюється
+    React.useEffect(() => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }, [tasks]);
+
     // Додає нове завдання до списку
     const addTask = () => {
         if (newTask.trim() === "") return; // Перевірка на порожнє завдання
@@ -28,7 +41,7 @@ function App() {
             <div>
                 {tasks.map((task, index) => (
                     <div key={index} className="task">
-                        <span className="tasky" >{task}</span>
+                        <span className="tasky">{task}</span>
                         <button onClick={() => deleteTask(index)}>Видалити</button>
                     </div>
                 ))}
